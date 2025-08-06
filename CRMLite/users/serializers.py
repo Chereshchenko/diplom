@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from .models import User, Company, Storage
+from users.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
 
@@ -39,17 +38,4 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')
         user = User.objects.create_user(**validated_data)
         return user
-    
-class CompanySerializer(serializers.ModelSerializer):
-    owner_email = serializers.EmailField(source='owner.email', read_only=True)
-    
-    class Meta:
-        model = Company
-        fields = ('id', 'title', 'inn', 'owner', 'owner_email')
-    
-class StorageSerializer(serializers.ModelSerializer):
-    company_title = serializers.CharField(source='company.title', read_only=True)
-    
-    class Meta:
-        model = Storage
-        fields = ('id', 'address', 'company', 'company_title')        
+  

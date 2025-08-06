@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'crm.User'
+AUTH_USER_MODEL = 'users.User'
 
 # Application definition
 
@@ -41,7 +41,13 @@ INSTALLED_APPS = [
     'crm',
     'rest_framework',
     'rest_framework_simplejwt',
-    'drf_spectacular'
+    'drf_spectacular',
+    'users',
+    'companies',
+    'suppliers',
+    'products',
+    'sales',
+    'supplies',
 ]
 
 MIDDLEWARE = [
