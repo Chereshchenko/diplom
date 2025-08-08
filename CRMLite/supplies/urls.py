@@ -7,4 +7,4 @@ router.register(r'supplies', SupplyViewSet, basename='supply')
 
 urlpatterns = [
     path('', include(router.urls)),
-] 
+]

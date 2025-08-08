@@ -2,11 +2,12 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from companies.models import Company
 from products.models import Product
+from users.models import User
 
 class Sale(models.Model):
     company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='sales', verbose_name='Компания')
     buyer_name = models.CharField(max_length=255, verbose_name='Имя покупателя')
-    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата продажи')
+    sale_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата продажи')
     products = models.ManyToManyField(Product, through='ProductSale', related_name='sales', verbose_name='Товары')
     
     class Meta:
@@ -28,5 +29,16 @@ class ProductSale(models.Model):
         verbose_name_plural = 'Товары в продажах'
         unique_together = ('sale', 'product')
     
+    def save(self, *args, **kwargs):
+        if not self.pk: 
+            self.product.quantity -= self.quantity
+            self.product.save()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.product.quantity += self.quantity
+        self.product.save()
+        super().delete(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.product.title} в продаже {self.sale.id}"    
+        return f"{self.product.title} в продаже #{self.sale.id}"
